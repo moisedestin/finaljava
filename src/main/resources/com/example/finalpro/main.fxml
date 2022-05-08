@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ListView?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/11" fx:controller="com.example.finalpro.MainController">
+   <VBox alignment="CENTER" spacing="20.0"
+        >
+      <padding>
+         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+      </padding>
+
+      <VBox spacing="2">
+         <children>
+            <TitledPane text="Config" collapsible="false">
+               <HBox spacing="10">
+                  <VBox spacing="2">
+                     <Label   text="Username"/>
+                     <TextField promptText="enter username (without _)  ..." fx:id="username"  />
+                  </VBox>
+                  <VBox spacing="2">
+                     <Label   text="Port"/>
+                     <TextField promptText="enter port ..." fx:id="port"   />
+                  </VBox>
+                  <VBox spacing="2">
+                     <Label   text="Folder name"/>
+                     <TextField text="filesDir" promptText="enter folder name ..." fx:id="folderField"   />
+                  </VBox>
+                  <VBox spacing="2">
+                     <Label   text=""/>
+                     <Button fx:id="startProgram" text="Start" onAction="#onSettingChange"/>
+                  </VBox>
+
+
+               </HBox>
+
+            </TitledPane>
+
+            <Text  fx:id="errorMessage" fill="red"/>
+            <TitledPane text="Request" collapsible="false">
+               <VBox spacing="5">
+                  <children>
+                     <HBox spacing="3">
+                        <VBox spacing="2">
+                           <Label   text="other peer listening port"/>
+                           <TextField fx:id="theOtherPeerListeningPort" promptText="Port"/>
+                        </VBox>
+                        <VBox spacing="2">
+                           <Label   text="file name"/>
+                           <TextField text="file.txt" fx:id="fileNameField" promptText="File name"/>
+                        </VBox>
+                     </HBox>
+                     <HBox spacing="10">
+                        <Button fx:id="name" disable="true" text="name" onAction="#searchAvailablePeers"/>
+                        <Button fx:id="knownPeers" disable="true" text="known peers" onAction="#getKnownPeers"/>
+                        <Button fx:id="itsMeBtn" disable="true" text="its me" onAction="#greetingPeer"/>
+                        <Button fx:id="fileBtn" disable="true" text="file" onAction="#askFile"/>
+                        <Button fx:id="downloadBtn" disable="true" text="download" onAction="#downloadFile"/>
+                        <Button fx:id="byeBtn" disable="true" text="bye" onAction="#disconnectFromNetwork"/>
+                     </HBox>
+                  </children>
+               </VBox>
+
+            </TitledPane>
+
+            <TitledPane text="Response" collapsible="false">
+               <VBox spacing="5">
+                  <children>
+                     <ListView fx:id="listResponse"/>
+                  </children>
+               </VBox>
+
+            </TitledPane>
+
+         </children>
+      </VBox>
+
+
+
+   </VBox>
+
+</AnchorPane>
