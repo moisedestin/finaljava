@@ -122,6 +122,36 @@ public class Slave implements Runnable{
 
                 }
                 break;
+                case bye : {
+                    int portWhoAsk = (int)input_client.readObject();
+
+
+                    Iterator<HashMap.Entry<Integer, Peerr>> entries = Main.listPeers.entrySet().iterator();
+                    while (entries.hasNext()) {
+                        HashMap.Entry<Integer, Peerr> entry = entries.next();
+                        Peerr peerr = (Peerr) entry.getValue();
+                        try {
+                            Client client = new Client( peerr.getPortNumber(), Config.HOSTNAME);
+                            client.bye(portWhoAsk);
+
+                        } catch (ConnectException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if(Main.listPeers.containsKey(portWhoAsk)){
+                        Main.listPeers.remove(portWhoAsk);
+                        System.out.println("the peer "+ portWhoAsk+ " has been removed " );
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main.fxml"));
+                        fxmlLoader.load();
+                        MainController mainController =  fxmlLoader.getController();
+                        if (mainController != null) {
+                            mainController.setListViewText("the peer "+ portWhoAsk+ " has been removed ");
+                        }
+                    }
+
+                }
+                break;
             }
 
 

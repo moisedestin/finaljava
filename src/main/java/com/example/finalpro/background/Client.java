@@ -178,4 +178,21 @@ public class Client {
             e.printStackTrace();
         }
     }
+
+    /**
+     * no longer want to be part of the network
+     */
+    public void bye(int portWhoAsk) {
+        try {
+            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+
+            output.writeObject(Message.MESSAGE_TYPE.bye.toString());
+            output.writeObject(portWhoAsk);
+
+            this.closeClient();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

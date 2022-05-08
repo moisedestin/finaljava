@@ -216,5 +216,11 @@ public class MainController {
      */
     @FXML
     public void disconnectFromNetwork(ActionEvent actionEvent) {
+        try {
+            Client client = new Client(Integer.parseInt(theOtherPeerListeningPort.getText()), Config.HOSTNAME );
+            client.bye(Main.myPort);
+        } catch (ConnectException e) {
+            listResponse.getItems().add("(ERROR) peer not found" );
+        }
     }
 }
