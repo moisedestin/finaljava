@@ -1,3 +1,5 @@
+Document explanation can be found in the project base directory.(documentExplanation.pdf)
+
 the system run on java 11 and the code was written with the idea intellij from jetbrains.
 
 it would be preferable to simply download intellij and run the project.
