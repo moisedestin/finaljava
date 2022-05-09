@@ -73,7 +73,7 @@ public class Slave implements Runnable{
 
                     var wrapper = new Object(){ int i = (int)input_client.readObject(); }; // in order to user i inside lambda expression
 
-                    String path = findFileInDir(filename, Config.LOCAL_DIR_FOR_FILES);
+                    String path = findFileInDir(filename, Main.myFolderName);
 
                     if(path != null){
                         Client client = new Client( portWhoAsk, Config.HOSTNAME);
@@ -105,6 +105,19 @@ public class Slave implements Runnable{
                          }
 
                      }
+
+                }
+                break;
+                case download : {
+                    String filename = (String)input_client.readObject();
+                    int portWhoAsk = (int)input_client.readObject();
+
+                    File file = new File(Main.myFolderName+"/"+filename);
+                    byte[] mybytearray = new byte[(int)file.length()];
+                    BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+                    bis.read(mybytearray, 0, mybytearray.length);
+                    output_client.write(mybytearray, 0, mybytearray.length);
+                    output_client.flush();
 
                 }
                 break;

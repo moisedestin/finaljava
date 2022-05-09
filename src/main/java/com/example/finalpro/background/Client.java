@@ -2,9 +2,7 @@ package com.example.finalpro.background;
 
 import com.example.finalpro.*;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ConnectException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -189,6 +187,37 @@ public class Client {
             output.writeObject(Message.MESSAGE_TYPE.bye.toString());
             output.writeObject(portWhoAsk);
 
+            this.closeClient();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * download file request
+     * @param filename
+     * @param portWhoAsk
+     */
+    public void downloadFile(String filename, int portWhoAsk) {
+        try {
+            ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+            ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+
+            output.writeObject(Message.MESSAGE_TYPE.download.toString());
+            output.writeObject(filename);
+            output.writeObject(portWhoAsk);
+
+
+            byte[] mybytearray = new byte[1024];
+            FileOutputStream fos = new FileOutputStream(Main.myFolderName+"/"+filename);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            int bytesRead = input.read(mybytearray, 0, mybytearray.length);
+            bos.write(mybytearray, 0, bytesRead);
+            bos.close();
+            fos.close();
+
+            System.out.println("download ended "+Main.myFolderName+"/"+filename);
             this.closeClient();
 
         } catch (IOException e) {

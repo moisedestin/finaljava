@@ -10,4 +10,4 @@ When the project started, first, provide the port, the username and the local fo
 
 Then, below, provide the peer port you desire to request on, for the action file ? bye ? . Please provide the filename
 
-For the action file, please look into the console to view when a peer answer to you, I didn't find a right way to update the gui from another class.
+For the action file, bye, please look into the console to view when a peer answer to you, I didn't find a right way to update the gui from another class.

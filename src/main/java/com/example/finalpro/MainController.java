@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainController {
     @FXML
@@ -208,6 +210,18 @@ public class MainController {
      */
     @FXML
     public void downloadFile(ActionEvent actionEvent) {
+        try {
+            Client client = new Client(Integer.parseInt(theOtherPeerListeningPort.getText()), Config.HOSTNAME );
+            ExecutorService executorService = Executors.newFixedThreadPool(5);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    client.downloadFile(fileNameField.getText(), Main.myPort);
+                }
+            }).start();
+        } catch (ConnectException e) {
+            listResponse.getItems().add("(ERROR) peer not found" );
+        }
     }
 
     /**
