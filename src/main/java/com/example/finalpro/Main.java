@@ -1,6 +1,7 @@
 package com.example.finalpro;
 
 import com.example.finalpro.background.Server;
+import com.example.finalpro.database.DatabaseConnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,12 +11,12 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Main extends Application {
 
-    public static HashMap<Integer, Peerr> listPeers = new HashMap<>();
     public static int myPort;
     public static String myUsername;
     public static String myFolderName;
@@ -55,7 +56,11 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
-
+        try {
+            DatabaseConnection.connect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
 
     }

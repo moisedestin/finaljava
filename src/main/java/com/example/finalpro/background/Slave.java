@@ -1,6 +1,7 @@
 package com.example.finalpro.background;
 
 import com.example.finalpro.*;
+import com.example.finalpro.database.DatabaseConnection;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
@@ -50,7 +51,7 @@ public class Slave implements Runnable{
                 }
                 break;
                 case known_peers :
-                    output_client.writeObject(new Response<HashMap<Integer, Peerr>>(200, Main.listPeers));
+                    output_client.writeObject(new Response<HashMap<Integer, Peerr>>(200, DatabaseConnection.getPeers()));
                 break;
                 case it_s_me : {
                     int port = (int)input_client.readObject();
@@ -58,11 +59,14 @@ public class Slave implements Runnable{
                     String username = (String)input_client.readObject();
                     Peerr peerr = new Peerr(port, hostName, username);
 
-                    if(Main.listPeers.size() == Config.MAXIMUM_CONFIGURED_PEER)
+                    if(DatabaseConnection.getPeers().size() == Config.MAXIMUM_CONFIGURED_PEER)
                         output_client.writeObject(new Response<String>(500, "maximum affortable peer reached"));
                     else{
-                        Main.listPeers.put(port, peerr);
-                        output_client.writeObject(new Response<String>(200, "You have been added"));
+                        if(DatabaseConnection.createOrUpdatePeer(peerr))
+                            output_client.writeObject(new Response<String>(200, "You have been added"));
+                        else
+                            output_client.writeObject(new Response<String>(500, "could not be added"));
+
                     }
 
                 }
@@ -90,7 +94,7 @@ public class Slave implements Runnable{
                         }
                     }
                     else{
-                        Iterator<HashMap.Entry<Integer, Peerr>> entries = Main.listPeers.entrySet().iterator();
+                        Iterator<HashMap.Entry<Integer, Peerr>> entries = DatabaseConnection.getPeers().entrySet().iterator();
                         while (wrapper.i > 0 && entries.hasNext()) {
                             HashMap.Entry<Integer, Peerr> entry = entries.next();
                             wrapper.i--;
@@ -139,7 +143,7 @@ public class Slave implements Runnable{
                     int portWhoAsk = (int)input_client.readObject();
 
 
-                    Iterator<HashMap.Entry<Integer, Peerr>> entries = Main.listPeers.entrySet().iterator();
+                    Iterator<HashMap.Entry<Integer, Peerr>> entries = DatabaseConnection.getPeers().entrySet().iterator();
                     while (entries.hasNext()) {
                         HashMap.Entry<Integer, Peerr> entry = entries.next();
                         Peerr peerr = (Peerr) entry.getValue();
@@ -152,15 +156,17 @@ public class Slave implements Runnable{
                         }
                     }
 
-                    if(Main.listPeers.containsKey(portWhoAsk)){
-                        Main.listPeers.remove(portWhoAsk);
-                        System.out.println("the peer "+ portWhoAsk+ " has been removed " );
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main.fxml"));
-                        fxmlLoader.load();
-                        MainController mainController =  fxmlLoader.getController();
-                        if (mainController != null) {
-                            mainController.setListViewText("the peer "+ portWhoAsk+ " has been removed ");
+                    if(DatabaseConnection.getPeers().containsKey(portWhoAsk)){
+                        if(DatabaseConnection.deletePeer(portWhoAsk)){
+                            System.out.println("the peer "+ portWhoAsk+ " has been removed " );
+                            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("main.fxml"));
+                            fxmlLoader.load();
+                            MainController mainController =  fxmlLoader.getController();
+                            if (mainController != null) {
+                                mainController.setListViewText("the peer "+ portWhoAsk+ " has been removed ");
+                            }
                         }
+
                     }
 
                 }

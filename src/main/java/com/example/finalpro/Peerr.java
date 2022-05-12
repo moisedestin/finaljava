@@ -34,4 +34,12 @@ public class Peerr implements Serializable {
     public String getUsername() {
         return username;
     }
+
+    /**
+     * get hostname
+     * @return
+     */
+    public String getHostName() {
+        return hostName;
+    }
 }
